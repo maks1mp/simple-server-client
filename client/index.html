@@ -7,22 +7,45 @@
     <title>Server</title>
 </head>
 <body>
-    <button id="add-friend">add</button>
-    
-    <script>
-        var btn = document.querySelector('#add-friend');
+    <div>
+        <input type="text" id="name">
+        <button id="add-friend">add</button>
+    </div>
+    <ul id="friends"></ul>
 
-        function addFriend(name) {
+    <script>
+        var btn = document.querySelector('#add-friend'),
+            input = document.querySelector('#name');
+
+        function addFriend(name, cb) {
             var request = new XMLHttpRequest();
             
             request.open('POST', '/friend');
             request.setRequestHeader('Content-type', 'application/json');
             request.send(JSON.stringify({name: name}));
+            request.onload = cb;
+        }
+
+        function getFriends() {
+            return fetch('/friends')
+                .then(function(response) {
+                    return response.json();
+                }).then(function(data) {
+                    document.querySelector('#friends')
+                        .innerHTML = data.map(function(friend) {
+                            return '<li>'+friend+'</li>'
+                        }).join('');
+                });
         }
 
         btn.addEventListener('click', function() {
-            addFriend('Mark');
+            if (input.value) {
+                addFriend(input.value, getFriends);
+                input.value = '';
+            }
         });
+
+        getFriends();
     </script>
 </body>
 </html>
