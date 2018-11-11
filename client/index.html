@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Server</title>
+</head>
+<body>
+    <button id="add-friend">add</button>
+    
+    <script>
+        var btn = document.querySelector('#add-friend');
+
+        function addFriend(name) {
+            var request = new XMLHttpRequest();
+            
+            request.open('POST', '/friend');
+            request.setRequestHeader('Content-type', 'application/json');
+            request.send(JSON.stringify({name: name}));
+        }
+
+        btn.addEventListener('click', function() {
+            addFriend('Mark');
+        });
+    </script>
+</body>
+</html>
